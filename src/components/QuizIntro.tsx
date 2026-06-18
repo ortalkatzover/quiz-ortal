@@ -25,13 +25,12 @@ export default function QuizIntro({ onStart }: QuizIntroProps) {
           alignItems: 'center',
           justifyContent: 'center',
           margin: '0 auto 28px',
-          boxShadow: '0 8px 24px rgba(192, 122, 142, 0.3)',
+          boxShadow: '0 8px 24px rgba(196, 128, 140, 0.3)',
         }}
       >
         <svg width="34" height="34" viewBox="0 0 34 34" fill="none" aria-hidden="true">
-          <path d="M17 3C9.268 3 3 9.268 3 17s6.268 14 14 14 14-6.268 14-14S24.732 3 17 3z" stroke="white" strokeWidth="2" fill="none"/>
-          <path d="M17 11v6l4 2" stroke="white" strokeWidth="2" strokeLinecap="round"/>
-          <circle cx="17" cy="17" r="2" fill="white"/>
+          <circle cx="17" cy="17" r="13" stroke="white" strokeWidth="2" fill="none"/>
+          <path d="M17 11v7l4 2" stroke="white" strokeWidth="2" strokeLinecap="round"/>
         </svg>
       </motion.div>
 
@@ -78,7 +77,7 @@ export default function QuizIntro({ onStart }: QuizIntroProps) {
           letterSpacing: '0.2px',
         }}
       >
-        ⏱ זה לוקח פחות משתי דקות.
+        זה לוקח פחות משתי דקות.
       </motion.p>
 
       <motion.button
@@ -96,22 +95,22 @@ export default function QuizIntro({ onStart }: QuizIntroProps) {
           fontSize: '18px',
           fontWeight: 700,
           cursor: 'pointer',
-          boxShadow: '0 6px 20px rgba(192, 122, 142, 0.4)',
+          boxShadow: '0 6px 20px rgba(196, 128, 140, 0.4)',
           transition: 'transform 0.15s ease, box-shadow 0.15s ease',
           fontFamily: 'inherit',
           letterSpacing: '0.3px',
         }}
         onMouseEnter={(e) => {
           (e.currentTarget as HTMLButtonElement).style.transform = 'translateY(-2px)';
-          (e.currentTarget as HTMLButtonElement).style.boxShadow = '0 10px 28px rgba(192, 122, 142, 0.5)';
+          (e.currentTarget as HTMLButtonElement).style.boxShadow = '0 10px 28px rgba(196, 128, 140, 0.5)';
         }}
         onMouseLeave={(e) => {
           (e.currentTarget as HTMLButtonElement).style.transform = '';
-          (e.currentTarget as HTMLButtonElement).style.boxShadow = '0 6px 20px rgba(192, 122, 142, 0.4)';
+          (e.currentTarget as HTMLButtonElement).style.boxShadow = '0 6px 20px rgba(196, 128, 140, 0.4)';
         }}
         aria-label="התחל את השאלון"
       >
-        מתחילות ✨
+        מתחילות
       </motion.button>
 
       <motion.p

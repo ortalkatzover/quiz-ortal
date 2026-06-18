@@ -170,7 +170,7 @@ export default function QuestionCard({
                   (e.currentTarget as HTMLButtonElement).style.boxShadow = '0 4px 16px rgba(192, 122, 142, 0.35)';
                 }}
               >
-                לשאלה הבאה ←
+                לשאלה הבאה
               </motion.button>
             )}
           </AnimatePresence>
@@ -200,7 +200,7 @@ export default function QuestionCard({
                 (e.currentTarget as HTMLButtonElement).style.textDecorationColor = 'transparent';
               }}
             >
-              ← חזרה לשאלה הקודמת
+              חזרה לשאלה הקודמת
             </button>
           )}
         </div>

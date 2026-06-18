@@ -168,12 +168,12 @@ export const QUESTIONS: Question[] = [
         score: 3,
       },
       {
-        text: '4–6 שעות',
+        text: '4-6 שעות',
         feedback: 'זו השקעה טובה שתאפשר לך ליישם.',
         score: 3,
       },
       {
-        text: '2–4 שעות',
+        text: '2-4 שעות',
         feedback: 'אפשר להתקדם, אבל תצטרכי להיות ממוקדת.',
         score: 1,
       },

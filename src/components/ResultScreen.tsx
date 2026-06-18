@@ -9,7 +9,6 @@ interface ResultConfig {
   primaryButtonHref?: string;
   secondaryButton?: string;
   secondaryButtonHref?: string;
-  emoji: string;
   tagColor: string;
   tagBg: string;
   tagLabel: string;
@@ -17,7 +16,6 @@ interface ResultConfig {
 
 const RESULTS: Record<QuizResult, ResultConfig> = {
   high_match: {
-    emoji: '🌟',
     tagLabel: 'התאמה גבוהה',
     tagColor: '#7B4F5E',
     tagBg: '#FDE8EE',
@@ -30,7 +28,6 @@ const RESULTS: Record<QuizResult, ResultConfig> = {
     secondaryButton: 'דברי איתי בוואטסאפ',
   },
   potential: {
-    emoji: '✨',
     tagLabel: 'פוטנציאל מצוין',
     tagColor: '#6B5B8E',
     tagBg: '#EEE8F5',
@@ -38,12 +35,11 @@ const RESULTS: Record<QuizResult, ResultConfig> = {
     description:
       'יש לך בסיס טוב, ומה שחסר לך עכשיו הוא סדר, ביטחון וליווי.',
     subText:
-      'את לא צריכה להיות מוכנה במאה אחוז — את צריכה מסגרת שתעזור לך להתקדם צעד אחר צעד.',
+      'את לא צריכה להיות מוכנה במאה אחוז - את צריכה מסגרת שתעזור לך להתקדם צעד אחר צעד.',
     primaryButton: 'אני רוצה לבדוק התאמה עם אורטל',
     secondaryButton: 'דברי איתי בוואטסאפ',
   },
   not_ready: {
-    emoji: '💡',
     tagLabel: 'בשלב הזה',
     tagColor: '#7A6856',
     tagBg: '#F5EDE8',
@@ -72,13 +68,25 @@ export default function ResultScreen({ result, onRestart }: ResultScreenProps) {
       style={{ textAlign: 'center' }}
     >
       <motion.div
-        initial={{ scale: 0.5, opacity: 0 }}
+        initial={{ scale: 0.8, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
-        transition={{ delay: 0.1, type: 'spring', stiffness: 200, damping: 15 }}
-        style={{ fontSize: '56px', lineHeight: 1, marginBottom: '16px' }}
+        transition={{ delay: 0.1, duration: 0.4 }}
+        style={{
+          width: '64px',
+          height: '64px',
+          background: 'linear-gradient(135deg, var(--color-primary-light), var(--color-primary))',
+          borderRadius: '50%',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          margin: '0 auto 16px',
+          boxShadow: '0 6px 20px rgba(196, 128, 140, 0.3)',
+        }}
         aria-hidden="true"
       >
-        {cfg.emoji}
+        <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+          <path d="M7 14l5 5 9-9" stroke="white" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"/>
+        </svg>
       </motion.div>
 
       <motion.span
@@ -155,9 +163,7 @@ export default function ResultScreen({ result, onRestart }: ResultScreenProps) {
         style={{ display: 'flex', flexDirection: 'column', gap: '12px', maxWidth: '360px', marginInline: 'auto' }}
       >
         <button
-          onClick={() => {
-            if (cfg.primaryButtonHref) window.open(cfg.primaryButtonHref, '_blank');
-          }}
+          onClick={() => { if (cfg.primaryButtonHref) window.open(cfg.primaryButtonHref, '_blank'); }}
           style={{
             width: '100%',
             padding: '16px',
@@ -168,17 +174,17 @@ export default function ResultScreen({ result, onRestart }: ResultScreenProps) {
             fontSize: '16px',
             fontWeight: 700,
             cursor: 'pointer',
-            boxShadow: '0 4px 16px rgba(192, 122, 142, 0.35)',
+            boxShadow: '0 4px 16px rgba(196, 128, 140, 0.35)',
             fontFamily: 'inherit',
             transition: 'transform 0.15s ease, box-shadow 0.15s ease',
           }}
           onMouseEnter={(e) => {
             (e.currentTarget as HTMLButtonElement).style.transform = 'translateY(-1px)';
-            (e.currentTarget as HTMLButtonElement).style.boxShadow = '0 8px 24px rgba(192, 122, 142, 0.45)';
+            (e.currentTarget as HTMLButtonElement).style.boxShadow = '0 8px 24px rgba(196, 128, 140, 0.45)';
           }}
           onMouseLeave={(e) => {
             (e.currentTarget as HTMLButtonElement).style.transform = '';
-            (e.currentTarget as HTMLButtonElement).style.boxShadow = '0 4px 16px rgba(192, 122, 142, 0.35)';
+            (e.currentTarget as HTMLButtonElement).style.boxShadow = '0 4px 16px rgba(196, 128, 140, 0.35)';
           }}
         >
           {cfg.primaryButton}
@@ -186,9 +192,7 @@ export default function ResultScreen({ result, onRestart }: ResultScreenProps) {
 
         {cfg.secondaryButton && (
           <button
-            onClick={() => {
-              if (cfg.secondaryButtonHref) window.open(cfg.secondaryButtonHref, '_blank');
-            }}
+            onClick={() => { if (cfg.secondaryButtonHref) window.open(cfg.secondaryButtonHref, '_blank'); }}
             style={{
               width: '100%',
               padding: '15px',
@@ -244,7 +248,7 @@ export default function ResultScreen({ result, onRestart }: ResultScreenProps) {
             (e.currentTarget as HTMLButtonElement).style.background = 'none';
           }}
         >
-          ↺ התחילי את השאלון מחדש
+          התחילי מחדש
         </button>
       </motion.div>
     </motion.div>

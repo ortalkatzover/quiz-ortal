@@ -22,12 +22,8 @@ export default function FeedbackMessage({ text, visible }: FeedbackMessageProps)
             background: 'var(--color-primary-xlight)',
             border: '1px solid var(--color-border)',
             borderRadius: '12px',
-            display: 'flex',
-            alignItems: 'flex-start',
-            gap: '10px',
           }}
         >
-          <span style={{ fontSize: '18px', lineHeight: 1 }}>✨</span>
           <p style={{
             margin: 0,
             fontSize: '15px',
