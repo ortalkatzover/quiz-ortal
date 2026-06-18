@@ -31,17 +31,13 @@ function loadState(): PersistedState | null {
 function saveState(state: PersistedState) {
   try {
     sessionStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-  } catch {
-    // ignore
-  }
+  } catch {}
 }
 
 function clearState() {
   try {
     sessionStorage.removeItem(STORAGE_KEY);
-  } catch {
-    // ignore
-  }
+  } catch {}
 }
 
 export default function App() {
@@ -123,30 +119,20 @@ export default function App() {
   const question = QUESTIONS[currentQuestion];
 
   return (
-    <div
-      style={{
-        minHeight: '100dvh',
-        width: '100%',
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'flex-start',
-        padding: '24px 16px 48px',
-        background: 'var(--color-primary-xlight)',
-      }}
-    >
+    <div style={{ minHeight: '100dvh', width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'flex-start', padding: '24px 16px 48px', position: 'relative', overflow: 'hidden' }}>
+
+      {/* Animated blobs */}
+      <div className="blob blob-1" aria-hidden="true" />
+      <div className="blob blob-2" aria-hidden="true" />
+      <div className="blob blob-3" aria-hidden="true" />
+
       <motion.header
         initial={{ opacity: 0, y: -10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4 }}
-        style={{
-          width: '100%',
-          maxWidth: '720px',
-          textAlign: 'center',
-          marginBottom: '20px',
-        }}
+        style={{ width: '100%', maxWidth: '720px', textAlign: 'center', marginBottom: '20px', position: 'relative', zIndex: 1 }}
       >
-        <p style={{ margin: 0, fontSize: '13px', color: 'var(--color-primary-dark)', fontWeight: 600, letterSpacing: '0.8px', textTransform: 'uppercase', opacity: 0.8 }}>
+        <p style={{ margin: 0, fontSize: '13px', color: '#fff', fontWeight: 700, letterSpacing: '1.2px', textTransform: 'uppercase', textShadow: '0 1px 4px rgba(0,0,0,0.15)' }}>
           מעצבות מבוקשות בעידן AI
         </p>
       </motion.header>
@@ -155,24 +141,29 @@ export default function App() {
         style={{
           width: '100%',
           maxWidth: '720px',
-          background: '#fff',
-          borderRadius: '24px',
-          boxShadow: '0 4px 40px rgba(192, 122, 142, 0.1), 0 1px 8px rgba(0,0,0,0.06)',
+          background: 'rgba(255, 255, 255, 0.78)',
+          backdropFilter: 'blur(24px)',
+          WebkitBackdropFilter: 'blur(24px)',
+          borderRadius: '28px',
+          border: '1px solid rgba(255,255,255,0.6)',
+          boxShadow: '0 8px 60px rgba(160, 80, 100, 0.18), 0 2px 12px rgba(0,0,0,0.06)',
           padding: 'clamp(28px, 6vw, 56px)',
           overflow: 'hidden',
+          position: 'relative',
+          zIndex: 1,
         }}
         role="main"
         aria-label="שאלון התאמה"
       >
         <AnimatePresence mode="wait">
           {phase === 'intro' && (
-            <motion.div key="intro" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0, transition: { duration: 0.2 } }}>
+            <motion.div key="intro" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10, transition: { duration: 0.2 } }}>
               <QuizIntro onStart={handleStart} />
             </motion.div>
           )}
 
           {phase === 'question' && question && (
-            <motion.div key={`q-${currentQuestion}`} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0, transition: { duration: 0.15 } }}>
+            <motion.div key={`q-${currentQuestion}`} initial={{ opacity: 0, x: -16 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 16, transition: { duration: 0.15 } }}>
               <ProgressBar current={currentQuestion + 1} />
               <QuestionCard
                 question={question}
@@ -188,22 +179,14 @@ export default function App() {
           )}
 
           {phase === 'result' && result && (
-            <motion.div key="result" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0, transition: { duration: 0.15 } }}>
+            <motion.div key="result" initial={{ opacity: 0, scale: 0.96 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, transition: { duration: 0.15 } }} transition={{ duration: 0.4, ease: 'easeOut' }}>
               <ResultScreen result={result} onRestart={handleRestart} />
             </motion.div>
           )}
         </AnimatePresence>
       </main>
 
-      <footer
-        style={{
-          marginTop: '24px',
-          textAlign: 'center',
-          color: 'var(--color-text-sub)',
-          fontSize: '12px',
-          opacity: 0.6,
-        }}
-      >
+      <footer style={{ marginTop: '24px', textAlign: 'center', color: 'rgba(255,255,255,0.7)', fontSize: '12px', position: 'relative', zIndex: 1 }}>
         © אורטל {new Date().getFullYear()} · כל הזכויות שמורות
       </footer>
     </div>
