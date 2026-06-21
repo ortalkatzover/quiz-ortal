@@ -1,13 +1,12 @@
 import { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import type { QuizPhase, LeadData, QuizResult } from './types/quiz';
+import type { QuizPhase, QuizResult } from './types/quiz';
 import { QUESTIONS, TOTAL_QUESTIONS } from './data/questions';
 import { calculateScore, determineResult, buildAnswerRecords } from './utils/calculateResult';
 import { submitLead } from './services/submitLead';
 import QuizIntro from './components/QuizIntro';
 import ProgressBar from './components/ProgressBar';
 import QuestionCard from './components/QuestionCard';
-import LeadForm from './components/LeadForm';
 import ResultScreen from './components/ResultScreen';
 
 const STORAGE_KEY = 'quiz_state_v2';
@@ -51,8 +50,6 @@ export default function App() {
   );
   const [showFeedback, setShowFeedback] = useState(saved?.showFeedback ?? false);
   const [result, setResult] = useState<QuizResult | null>(saved?.result ?? null);
-  const [isSubmitting, setIsSubmitting] = useState(false);
-
   useEffect(() => {
     if (phase === 'intro') return;
     saveState({ phase, currentQuestion, selectedAnswers, showFeedback, result });
@@ -78,7 +75,16 @@ export default function App() {
   const handleNext = useCallback(() => {
     const isLast = currentQuestion === TOTAL_QUESTIONS - 1;
     if (isLast) {
-      setPhase('form');
+      const { totalScore, strongWarningCount, lightWarningCount } = calculateScore(selectedAnswers, QUESTIONS);
+      const quizResult = determineResult(totalScore, strongWarningCount);
+      const answerRecords = buildAnswerRecords(selectedAnswers, QUESTIONS);
+      submitLead({
+        fullName: '', phone: '', email: '', marketingConsent: false,
+        answers: answerRecords, totalScore, strongWarningCount, lightWarningCount,
+        result: quizResult, createdAt: new Date().toISOString(),
+      });
+      setResult(quizResult);
+      setPhase('result');
       setShowFeedback(false);
     } else {
       const nextQ = currentQuestion + 1;
@@ -93,27 +99,6 @@ export default function App() {
     setCurrentQuestion(prevQ);
     setShowFeedback(selectedAnswers[prevQ] !== null);
   }, [currentQuestion, selectedAnswers]);
-
-  const handleFormSubmit = useCallback(async (leadData: LeadData) => {
-    setIsSubmitting(true);
-    const { totalScore, strongWarningCount, lightWarningCount } = calculateScore(selectedAnswers, QUESTIONS);
-    const quizResult = determineResult(totalScore, strongWarningCount);
-    const answerRecords = buildAnswerRecords(selectedAnswers, QUESTIONS);
-
-    await submitLead({
-      ...leadData,
-      answers: answerRecords,
-      totalScore,
-      strongWarningCount,
-      lightWarningCount,
-      result: quizResult,
-      createdAt: new Date().toISOString(),
-    });
-
-    setResult(quizResult);
-    setPhase('result');
-    setIsSubmitting(false);
-  }, [selectedAnswers]);
 
   const handleRestart = useCallback(() => {
     clearState();
@@ -182,12 +167,6 @@ export default function App() {
                 showFeedback={showFeedback}
                 questionNumber={currentQuestion}
               />
-            </motion.div>
-          )}
-
-          {phase === 'form' && (
-            <motion.div key="form" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, transition: { duration: 0.15 } }}>
-              <LeadForm onSubmit={handleFormSubmit} isSubmitting={isSubmitting} />
             </motion.div>
           )}
 
