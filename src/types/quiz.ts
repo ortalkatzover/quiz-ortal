@@ -1,8 +1,10 @@
+export type WarningLevel = 'strong' | 'light' | 'none';
+
 export interface Answer {
   text: string;
   feedback: string;
   score: number;
-  warning?: boolean;
+  warning: WarningLevel;
 }
 
 export interface Question {
@@ -24,7 +26,7 @@ export interface QuizAnswerRecord {
   questionId: number;
   answerIndex: number;
   score: number;
-  warning: boolean;
+  warning: WarningLevel;
 }
 
 export interface Submission {
@@ -34,18 +36,22 @@ export interface Submission {
   marketingConsent: boolean;
   answers: QuizAnswerRecord[];
   totalScore: number;
-  warningCount: number;
+  strongWarningCount: number;
+  lightWarningCount: number;
   result: QuizResult;
   createdAt: string;
 }
 
 export type QuizPhase = 'intro' | 'question' | 'form' | 'result';
 
-export interface QuizStateData {
-  phase: QuizPhase;
-  currentQuestion: number;
-  selectedAnswers: (number | null)[];
-  showFeedback: boolean;
-  leadData: LeadData | null;
-  result: QuizResult | null;
+export interface ResultContent {
+  title: string;
+  description: string;
+  subText?: string;
+  contactNote?: string;
+  primaryButton?: string;
+  primaryButtonHref?: string;
+  secondaryButton?: string;
+  secondaryButtonHref?: string;
+  footerNote?: string;
 }

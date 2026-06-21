@@ -2,85 +2,24 @@ import { useEffect } from 'react';
 import { motion } from 'framer-motion';
 import confetti from 'canvas-confetti';
 import type { QuizResult } from '../types/quiz';
-
-interface ResultConfig {
-  title: string;
-  description: string;
-  subText: string;
-  primaryButton: string;
-  primaryButtonHref?: string;
-  secondaryButton?: string;
-  secondaryButtonHref?: string;
-  tagColor: string;
-  tagBg: string;
-  tagLabel: string;
-  accentColor: string;
-}
-
-const RESULTS: Record<QuizResult, ResultConfig> = {
-  high_match: {
-    tagLabel: 'התאמה גבוהה',
-    tagColor: '#7B4F5E',
-    tagBg: '#FDE8EE',
-    accentColor: '#C4808C',
-    title: 'נראה שאת מתאימה מאוד לתוכנית',
-    description: 'יש לך חיבור לעיצוב, נכונות להתקדם ובסיס מצוין להפוך את הכישרון שלך לעסק.',
-    subText: 'בתוכנית תקבלי ממני את המפה, הכלים והליווי שיעזרו לך להפוך את היכולת שלך להצעה שאפשר למכור.',
-    primaryButton: 'אני רוצה להצטרף לתוכנית',
-    secondaryButton: 'דברי איתי בוואטסאפ',
-  },
-  potential: {
-    tagLabel: 'פוטנציאל מצוין',
-    tagColor: '#6B5B8E',
-    tagBg: '#EEE8F5',
-    accentColor: '#8B7BAE',
-    title: 'יש לך פוטנציאל מצוין',
-    description: 'יש לך בסיס טוב, ומה שחסר לך עכשיו הוא סדר, ביטחון וליווי.',
-    subText: 'את לא צריכה להיות מוכנה במאה אחוז - את צריכה מסגרת שתעזור לך להתקדם צעד אחר צעד.',
-    primaryButton: 'אני רוצה לבדוק התאמה עם אורטל',
-    secondaryButton: 'דברי איתי בוואטסאפ',
-  },
-  not_ready: {
-    tagLabel: 'בשלב הזה',
-    tagColor: '#7A6856',
-    tagBg: '#F5EDE8',
-    accentColor: '#A08868',
-    title: 'יכול להיות שזה עדיין לא הזמן הנכון',
-    description: 'כדאי לצבור עוד ניסיון ולוודא שיש לך זמן ונכונות ליישם לפני ההצטרפות.',
-    subText: 'זה לא אומר שאין לך פוטנציאל, אלא שכדאי לחזק קודם את הבסיס.',
-    primaryButton: 'אני רוצה להמשיך לעקוב וללמוד',
-  },
-};
+import { RESULTS } from '../data/results';
 
 function fireConfetti() {
-  const colors = ['#C4808C', '#F0A0B4', '#EFC8D0', '#ffffff', '#A06070'];
-
-  confetti({
-    particleCount: 80,
-    spread: 70,
-    origin: { x: 0.25, y: 0.55 },
-    colors,
-    scalar: 0.9,
-  });
+  const colors = ['#dda6a3', '#0f3569', '#f0c8c6', '#ffffff', '#c0d0e8'];
+  confetti({ particleCount: 80, spread: 70, origin: { x: 0.25, y: 0.55 }, colors, scalar: 0.9 });
   setTimeout(() => {
-    confetti({
-      particleCount: 80,
-      spread: 70,
-      origin: { x: 0.75, y: 0.55 },
-      colors,
-      scalar: 0.9,
-    });
+    confetti({ particleCount: 80, spread: 70, origin: { x: 0.75, y: 0.55 }, colors, scalar: 0.9 });
   }, 150);
   setTimeout(() => {
-    confetti({
-      particleCount: 40,
-      spread: 50,
-      origin: { x: 0.5, y: 0.4 },
-      colors,
-      scalar: 0.8,
-    });
+    confetti({ particleCount: 40, spread: 50, origin: { x: 0.5, y: 0.4 }, colors, scalar: 0.8 });
   }, 300);
 }
+
+const TAG_STYLES: Record<QuizResult, { label: string; color: string; bg: string }> = {
+  high_match: { label: 'התאמה גבוהה', color: '#0f3569', bg: 'rgba(15,53,105,0.08)' },
+  potential:  { label: 'פוטנציאל מצוין', color: '#7a5c00', bg: 'rgba(221,180,80,0.12)' },
+  not_ready:  { label: 'בשלב הזה', color: '#6b4040', bg: 'rgba(221,166,163,0.2)' },
+};
 
 interface ResultScreenProps {
   result: QuizResult;
@@ -89,6 +28,7 @@ interface ResultScreenProps {
 
 export default function ResultScreen({ result, onRestart }: ResultScreenProps) {
   const cfg = RESULTS[result];
+  const tag = TAG_STYLES[result];
 
   useEffect(() => {
     if (result === 'high_match') {
@@ -104,27 +44,43 @@ export default function ResultScreen({ result, onRestart }: ResultScreenProps) {
       transition={{ duration: 0.5, ease: 'easeOut' }}
       style={{ textAlign: 'center' }}
     >
-      {/* Icon circle */}
+      {/* Icon */}
       <motion.div
-        initial={{ scale: 0, rotate: -10 }}
+        initial={{ scale: 0, rotate: -15 }}
         animate={{ scale: 1, rotate: 0 }}
         transition={{ delay: 0.1, type: 'spring', stiffness: 220, damping: 16 }}
         style={{
-          width: '72px',
-          height: '72px',
-          background: `linear-gradient(135deg, ${cfg.accentColor}cc, ${cfg.accentColor})`,
+          width: '72px', height: '72px',
+          background: result === 'high_match'
+            ? 'linear-gradient(135deg, var(--color-navy), var(--color-navy-dark))'
+            : result === 'potential'
+            ? 'linear-gradient(135deg, var(--color-rose), var(--color-rose-dark))'
+            : 'linear-gradient(135deg, #c0b0a0, #9a8878)',
           borderRadius: '50%',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
           margin: '0 auto 18px',
-          boxShadow: `0 8px 28px ${cfg.accentColor}55`,
+          boxShadow: result === 'high_match'
+            ? '0 8px 28px rgba(15,53,105,0.35)'
+            : '0 8px 28px rgba(221,166,163,0.35)',
         }}
         aria-hidden="true"
       >
-        <svg width="30" height="30" viewBox="0 0 30 30" fill="none">
-          <path d="M7 15l6 6 10-10" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
-        </svg>
+        {result === 'high_match' ? (
+          <svg width="30" height="30" viewBox="0 0 30 30" fill="none">
+            <path d="M7 15l6 6 10-10" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
+          </svg>
+        ) : result === 'potential' ? (
+          <svg width="30" height="30" viewBox="0 0 30 30" fill="none">
+            <circle cx="15" cy="15" r="10" stroke="white" strokeWidth="2" fill="none"/>
+            <path d="M15 10v6" stroke="white" strokeWidth="2.2" strokeLinecap="round"/>
+            <circle cx="15" cy="20" r="1.2" fill="white"/>
+          </svg>
+        ) : (
+          <svg width="30" height="30" viewBox="0 0 30 30" fill="none">
+            <path d="M15 8l1.5 8h-3L15 8z" fill="white"/>
+            <circle cx="15" cy="20" r="1.5" fill="white"/>
+          </svg>
+        )}
       </motion.div>
 
       {/* Tag */}
@@ -136,108 +92,118 @@ export default function ResultScreen({ result, onRestart }: ResultScreenProps) {
           display: 'inline-block',
           padding: '5px 16px',
           borderRadius: '99px',
-          background: cfg.tagBg,
-          color: cfg.tagColor,
+          background: tag.bg,
+          color: tag.color,
           fontSize: '13px',
           fontWeight: 700,
           marginBottom: '20px',
-          letterSpacing: '0.4px',
-          border: `1px solid ${cfg.tagColor}33`,
+          letterSpacing: '0.3px',
         }}
       >
-        {cfg.tagLabel}
+        {tag.label}
       </motion.span>
 
+      {/* Title */}
       <motion.h2
         initial={{ opacity: 0, y: 8 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.28 }}
         style={{
-          fontSize: 'clamp(20px, 4.5vw, 28px)',
+          fontSize: 'clamp(20px, 4.5vw, 26px)',
           fontWeight: 700,
-          color: 'var(--color-text-main)',
+          color: 'var(--color-navy)',
           lineHeight: 1.35,
-          marginBottom: '14px',
+          marginBottom: '16px',
           fontFamily: "'Playfair Display', 'Assistant', serif",
         }}
       >
         {cfg.title}
       </motion.h2>
 
+      {/* Description */}
       <motion.p
         initial={{ opacity: 0, y: 6 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.34 }}
-        style={{
-          fontSize: '16px',
-          color: 'var(--color-text-sub)',
-          lineHeight: 1.75,
-          marginBottom: '10px',
-          maxWidth: '430px',
-          marginInline: 'auto',
-        }}
+        style={{ fontSize: '16px', color: 'var(--color-text-sub)', lineHeight: 1.75, marginBottom: '12px', maxWidth: '440px', marginInline: 'auto' }}
       >
         {cfg.description}
       </motion.p>
 
-      <motion.p
-        initial={{ opacity: 0, y: 6 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.4 }}
-        style={{
-          fontSize: '15px',
-          color: 'var(--color-primary-dark)',
-          lineHeight: 1.75,
-          marginBottom: '36px',
-          maxWidth: '430px',
-          marginInline: 'auto',
-          fontWeight: 500,
-        }}
-      >
-        {cfg.subText}
-      </motion.p>
+      {/* Sub text */}
+      {cfg.subText && (
+        <motion.p
+          initial={{ opacity: 0, y: 6 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.38 }}
+          style={{ fontSize: '15px', color: 'var(--color-text-sub)', lineHeight: 1.75, marginBottom: cfg.contactNote ? '12px' : '32px', maxWidth: '440px', marginInline: 'auto' }}
+        >
+          {cfg.subText}
+        </motion.p>
+      )}
+
+      {/* Contact note (potential only) */}
+      {cfg.contactNote && (
+        <motion.p
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.42 }}
+          style={{ fontSize: '15px', color: 'var(--color-navy)', fontWeight: 700, marginBottom: '32px' }}
+        >
+          {cfg.contactNote}
+        </motion.p>
+      )}
 
       {/* Buttons */}
       <motion.div
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.46 }}
+        transition={{ delay: 0.44 }}
         style={{ display: 'flex', flexDirection: 'column', gap: '12px', maxWidth: '360px', marginInline: 'auto' }}
       >
-        <motion.button
-          whileHover={{ scale: 1.02, y: -2 }}
-          whileTap={{ scale: 0.97 }}
-          onClick={() => { if (cfg.primaryButtonHref) window.open(cfg.primaryButtonHref, '_blank'); }}
-          style={{
-            width: '100%',
-            padding: '17px',
-            borderRadius: '14px',
-            border: 'none',
-            background: 'linear-gradient(135deg, var(--color-primary), var(--color-primary-dark))',
-            color: '#fff',
-            fontSize: '16px',
-            fontWeight: 700,
-            cursor: 'pointer',
-            boxShadow: '0 6px 24px rgba(160,96,112,0.38)',
-            fontFamily: 'inherit',
-          }}
-        >
-          {cfg.primaryButton}
-        </motion.button>
+        {cfg.primaryButton && cfg.primaryButtonHref && (
+          <>
+            <motion.button
+              whileHover={{ scale: 1.02, y: -2 }}
+              whileTap={{ scale: 0.97 }}
+              onClick={() => window.open(cfg.primaryButtonHref, '_blank')}
+              style={{
+                width: '100%',
+                padding: '17px',
+                borderRadius: '13px',
+                border: 'none',
+                background: 'linear-gradient(135deg, var(--color-navy), var(--color-navy-dark))',
+                color: '#fff',
+                fontSize: '16px',
+                fontWeight: 700,
+                cursor: 'pointer',
+                boxShadow: '0 6px 24px rgba(15,53,105,0.35)',
+                fontFamily: 'inherit',
+              }}
+            >
+              {cfg.primaryButton}
+            </motion.button>
+            {cfg.footerNote && (
+              <p style={{ fontSize: '12px', color: 'var(--color-text-sub)', margin: '-4px 0 4px', lineHeight: 1.5 }}>
+                {cfg.footerNote}
+              </p>
+            )}
+          </>
+        )}
 
         {cfg.secondaryButton && (
           <motion.button
             whileHover={{ scale: 1.01 }}
             whileTap={{ scale: 0.98 }}
-            onClick={() => { if (cfg.secondaryButtonHref) window.open(cfg.secondaryButtonHref, '_blank'); }}
+            onClick={() => cfg.secondaryButtonHref && window.open(cfg.secondaryButtonHref, '_blank')}
             style={{
               width: '100%',
               padding: '15px',
-              borderRadius: '14px',
-              border: '2px solid var(--color-primary-light)',
+              borderRadius: '13px',
+              border: '2px solid var(--color-rose-light)',
               background: 'rgba(255,255,255,0.6)',
-              color: 'var(--color-primary-dark)',
-              fontSize: '16px',
+              color: 'var(--color-navy)',
+              fontSize: '15px',
               fontWeight: 600,
               cursor: 'pointer',
               fontFamily: 'inherit',
@@ -246,13 +212,13 @@ export default function ResultScreen({ result, onRestart }: ResultScreenProps) {
             }}
             onMouseEnter={(e) => {
               const el = e.currentTarget as HTMLButtonElement;
-              el.style.background = 'rgba(239,200,208,0.4)';
-              el.style.borderColor = 'var(--color-primary)';
+              el.style.background = 'rgba(221,166,163,0.12)';
+              el.style.borderColor = 'var(--color-rose)';
             }}
             onMouseLeave={(e) => {
               const el = e.currentTarget as HTMLButtonElement;
               el.style.background = 'rgba(255,255,255,0.6)';
-              el.style.borderColor = 'var(--color-primary-light)';
+              el.style.borderColor = 'var(--color-rose-light)';
             }}
           >
             {cfg.secondaryButton}
@@ -263,33 +229,20 @@ export default function ResultScreen({ result, onRestart }: ResultScreenProps) {
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ delay: 0.6 }}
-        style={{ marginTop: '32px', paddingTop: '24px', borderTop: '1px solid rgba(232,205,210,0.5)' }}
+        transition={{ delay: 0.58 }}
+        style={{ marginTop: '32px', paddingTop: '24px', borderTop: '1px solid rgba(228,208,207,0.5)' }}
       >
         <button
           onClick={onRestart}
           style={{
-            background: 'none',
-            border: 'none',
-            color: 'var(--color-text-sub)',
-            fontSize: '14px',
-            cursor: 'pointer',
-            fontFamily: 'inherit',
-            padding: '8px 16px',
-            borderRadius: '8px',
-            opacity: 0.65,
-            transition: 'opacity 0.2s, color 0.2s',
+            background: 'none', border: 'none',
+            color: 'var(--color-text-sub)', fontSize: '14px',
+            cursor: 'pointer', fontFamily: 'inherit',
+            padding: '8px 16px', borderRadius: '8px',
+            opacity: 0.6, transition: 'opacity 0.2s, color 0.2s',
           }}
-          onMouseEnter={(e) => {
-            const el = e.currentTarget as HTMLButtonElement;
-            el.style.opacity = '1';
-            el.style.color = 'var(--color-primary)';
-          }}
-          onMouseLeave={(e) => {
-            const el = e.currentTarget as HTMLButtonElement;
-            el.style.opacity = '0.65';
-            el.style.color = 'var(--color-text-sub)';
-          }}
+          onMouseEnter={(e) => { const el = e.currentTarget as HTMLButtonElement; el.style.opacity = '1'; el.style.color = 'var(--color-navy)'; }}
+          onMouseLeave={(e) => { const el = e.currentTarget as HTMLButtonElement; el.style.opacity = '0.6'; el.style.color = 'var(--color-text-sub)'; }}
         >
           התחילי מחדש
         </button>

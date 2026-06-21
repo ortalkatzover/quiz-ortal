@@ -19,18 +19,13 @@ export default function FeedbackMessage({ text, visible }: FeedbackMessageProps)
           style={{
             marginTop: '16px',
             padding: '14px 18px',
-            background: 'var(--color-primary-xlight)',
-            border: '1px solid var(--color-border)',
-            borderRadius: '12px',
+            background: 'rgba(221, 166, 163, 0.1)',
+            border: '1px solid rgba(221, 166, 163, 0.35)',
+            borderRight: '3px solid var(--color-rose)',
+            borderRadius: '10px',
           }}
         >
-          <p style={{
-            margin: 0,
-            fontSize: '15px',
-            lineHeight: 1.6,
-            color: 'var(--color-primary-dark)',
-            fontWeight: 500,
-          }}>
+          <p style={{ margin: 0, fontSize: '15px', lineHeight: 1.6, color: 'var(--color-navy)', fontWeight: 500 }}>
             {text}
           </p>
         </motion.div>

@@ -7,19 +7,19 @@ import type { Submission } from '../types/quiz';
 const WEBHOOK_URL = '';
 // =====================================================
 
-const STORAGE_KEY = 'quiz_submission';
+const STORAGE_KEY = 'quiz_submissions_v2';
 
 export async function submitLead(submission: Submission): Promise<void> {
   // Save to localStorage
   try {
-    const existing = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+    const existing: Submission[] = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
     existing.push(submission);
     localStorage.setItem(STORAGE_KEY, JSON.stringify(existing));
   } catch {
     console.error('Failed to save to localStorage');
   }
 
-  // Log to console for debugging
+  // Log for debugging
   console.log('Quiz Submission:', submission);
 
   // Send to webhook if URL is configured

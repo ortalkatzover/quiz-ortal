@@ -19,13 +19,13 @@ export default function QuizIntro({ onStart }: QuizIntroProps) {
         style={{
           width: '72px',
           height: '72px',
-          background: 'linear-gradient(135deg, var(--color-primary-light), var(--color-primary))',
+          background: 'linear-gradient(135deg, var(--color-rose-light), var(--color-rose))',
           borderRadius: '50%',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
           margin: '0 auto 28px',
-          boxShadow: '0 8px 24px rgba(196, 128, 140, 0.3)',
+          boxShadow: '0 8px 24px rgba(221, 166, 163, 0.4)',
         }}
       >
         <svg width="34" height="34" viewBox="0 0 34 34" fill="none" aria-hidden="true">
@@ -40,10 +40,11 @@ export default function QuizIntro({ onStart }: QuizIntroProps) {
         transition={{ delay: 0.2, duration: 0.4 }}
         style={{
           fontSize: 'clamp(22px, 5vw, 30px)',
-          fontWeight: 800,
-          color: 'var(--color-text-main)',
+          fontWeight: 700,
+          color: 'var(--color-navy)',
           lineHeight: 1.35,
           marginBottom: '16px',
+          fontFamily: "'Playfair Display', 'Assistant', serif",
         }}
       >
         יש לך את מה שצריך כדי להפוך את הכישרון שלך לעסק?
@@ -71,10 +72,9 @@ export default function QuizIntro({ onStart }: QuizIntroProps) {
         transition={{ delay: 0.4, duration: 0.4 }}
         style={{
           fontSize: '13px',
-          color: 'var(--color-primary)',
-          fontWeight: 500,
+          color: 'var(--color-rose-dark)',
+          fontWeight: 600,
           marginBottom: '36px',
-          letterSpacing: '0.2px',
         }}
       >
         זה לוקח פחות משתי דקות.
@@ -84,29 +84,21 @@ export default function QuizIntro({ onStart }: QuizIntroProps) {
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.45, duration: 0.4 }}
+        whileHover={{ scale: 1.02, y: -2 }}
         whileTap={{ scale: 0.97 }}
         onClick={onStart}
         style={{
-          padding: '18px 52px',
-          background: 'linear-gradient(135deg, var(--color-primary), var(--color-primary-dark))',
+          padding: '17px 52px',
+          background: 'linear-gradient(135deg, var(--color-navy), var(--color-navy-dark))',
           color: '#fff',
           border: 'none',
           borderRadius: '14px',
           fontSize: '18px',
           fontWeight: 700,
           cursor: 'pointer',
-          boxShadow: '0 6px 20px rgba(196, 128, 140, 0.4)',
-          transition: 'transform 0.15s ease, box-shadow 0.15s ease',
+          boxShadow: '0 6px 24px rgba(15, 53, 105, 0.35)',
           fontFamily: 'inherit',
           letterSpacing: '0.3px',
-        }}
-        onMouseEnter={(e) => {
-          (e.currentTarget as HTMLButtonElement).style.transform = 'translateY(-2px)';
-          (e.currentTarget as HTMLButtonElement).style.boxShadow = '0 10px 28px rgba(196, 128, 140, 0.5)';
-        }}
-        onMouseLeave={(e) => {
-          (e.currentTarget as HTMLButtonElement).style.transform = '';
-          (e.currentTarget as HTMLButtonElement).style.boxShadow = '0 6px 20px rgba(196, 128, 140, 0.4)';
         }}
         aria-label="התחל את השאלון"
       >
@@ -117,11 +109,7 @@ export default function QuizIntro({ onStart }: QuizIntroProps) {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.6, duration: 0.4 }}
-        style={{
-          marginTop: '20px',
-          fontSize: '13px',
-          color: 'var(--color-text-sub)',
-        }}
+        style={{ marginTop: '20px', fontSize: '13px', color: 'var(--color-text-sub)' }}
       >
         ללא התחייבות · ללא כרטיס אשראי
       </motion.p>

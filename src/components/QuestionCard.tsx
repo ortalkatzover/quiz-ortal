@@ -30,8 +30,8 @@ export default function QuestionCard({
       <h2
         style={{
           fontSize: 'clamp(18px, 3.5vw, 22px)',
-          fontWeight: 800,
-          color: 'var(--color-text-main)',
+          fontWeight: 700,
+          color: 'var(--color-navy)',
           marginBottom: '24px',
           lineHeight: 1.4,
           fontFamily: "'Playfair Display', 'Assistant', serif",
@@ -49,7 +49,7 @@ export default function QuestionCard({
             <motion.button
               key={`${questionNumber}-${index}`}
               initial={{ opacity: 0, y: 14 }}
-              animate={{ opacity: dimmed ? 0.45 : 1, y: 0 }}
+              animate={{ opacity: dimmed ? 0.42 : 1, y: 0 }}
               transition={{ duration: 0.3, delay: index * 0.07, ease: 'easeOut' }}
               whileTap={{ scale: 0.985 }}
               onClick={() => onSelect(index)}
@@ -60,17 +60,17 @@ export default function QuestionCard({
                 width: '100%',
                 textAlign: 'right',
                 padding: '15px 18px',
-                borderRadius: '14px',
-                border: `2px solid ${isSelected ? 'var(--color-primary)' : 'rgba(232, 205, 210, 0.6)'}`,
+                borderRadius: '13px',
+                border: `2px solid ${isSelected ? 'var(--color-navy)' : 'rgba(228, 208, 207, 0.7)'}`,
                 background: isSelected
-                  ? 'linear-gradient(135deg, rgba(239,200,208,0.4), rgba(196,128,140,0.12))'
-                  : 'rgba(255,255,255,0.7)',
+                  ? 'rgba(15, 53, 105, 0.05)'
+                  : 'rgba(255, 255, 255, 0.75)',
                 cursor: 'pointer',
                 display: 'flex',
                 alignItems: 'center',
                 gap: '12px',
                 boxShadow: isSelected
-                  ? '0 0 0 3px rgba(196,128,140,0.15), 0 4px 16px rgba(196,128,140,0.15)'
+                  ? '0 0 0 3px rgba(15,53,105,0.1), 0 4px 16px rgba(15,53,105,0.08)'
                   : '0 1px 4px rgba(0,0,0,0.04)',
                 transition: 'border-color 0.2s, box-shadow 0.2s, background 0.2s, opacity 0.25s',
                 transform: isSelected ? 'scale(1.01)' : 'scale(1)',
@@ -78,17 +78,17 @@ export default function QuestionCard({
               onMouseEnter={(e) => {
                 if (!isSelected) {
                   const el = e.currentTarget as HTMLButtonElement;
-                  el.style.borderColor = 'var(--color-primary-light)';
-                  el.style.boxShadow = '0 4px 14px rgba(196,128,140,0.14)';
+                  el.style.borderColor = 'var(--color-rose)';
+                  el.style.boxShadow = '0 4px 14px rgba(221,166,163,0.2)';
                   el.style.background = 'rgba(255,255,255,0.95)';
                 }
               }}
               onMouseLeave={(e) => {
                 if (!isSelected) {
                   const el = e.currentTarget as HTMLButtonElement;
-                  el.style.borderColor = 'rgba(232,205,210,0.6)';
+                  el.style.borderColor = 'rgba(228,208,207,0.7)';
                   el.style.boxShadow = '0 1px 4px rgba(0,0,0,0.04)';
-                  el.style.background = 'rgba(255,255,255,0.7)';
+                  el.style.background = 'rgba(255,255,255,0.75)';
                 }
               }}
             >
@@ -97,14 +97,14 @@ export default function QuestionCard({
                   width: '22px',
                   height: '22px',
                   borderRadius: '50%',
-                  border: `2px solid ${isSelected ? 'var(--color-primary)' : 'var(--color-border)'}`,
-                  background: isSelected ? 'var(--color-primary)' : 'transparent',
+                  border: `2px solid ${isSelected ? 'var(--color-navy)' : 'var(--color-border)'}`,
+                  background: isSelected ? 'var(--color-navy)' : 'transparent',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
                   flexShrink: 0,
                   transition: 'all 0.2s ease',
-                  boxShadow: isSelected ? '0 2px 8px rgba(196,128,140,0.4)' : 'none',
+                  boxShadow: isSelected ? '0 2px 8px rgba(15,53,105,0.3)' : 'none',
                 }}
               >
                 {isSelected && (
@@ -122,7 +122,7 @@ export default function QuestionCard({
                 style={{
                   fontSize: '16px',
                   fontWeight: isSelected ? 700 : 400,
-                  color: isSelected ? 'var(--color-primary-dark)' : 'var(--color-text-main)',
+                  color: isSelected ? 'var(--color-navy)' : 'var(--color-text-main)',
                   lineHeight: 1.45,
                   flex: 1,
                   transition: 'font-weight 0.15s, color 0.15s',
@@ -135,10 +135,7 @@ export default function QuestionCard({
         })}
       </div>
 
-      <FeedbackMessage
-        text={selectedAnswer?.feedback ?? ''}
-        visible={showFeedback && selectedIndex !== null}
-      />
+      <FeedbackMessage text={selectedAnswer?.feedback ?? ''} visible={showFeedback && selectedIndex !== null} />
 
       <div style={{ marginTop: '24px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
         <AnimatePresence>
@@ -154,16 +151,15 @@ export default function QuestionCard({
               style={{
                 width: '100%',
                 padding: '16px',
-                borderRadius: '14px',
+                borderRadius: '13px',
                 border: 'none',
-                background: 'linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%)',
+                background: 'linear-gradient(135deg, var(--color-navy), var(--color-navy-dark))',
                 color: '#fff',
                 fontSize: '17px',
                 fontWeight: 700,
                 cursor: 'pointer',
-                boxShadow: '0 6px 20px rgba(160,96,112,0.35)',
+                boxShadow: '0 6px 20px rgba(15,53,105,0.3)',
                 fontFamily: 'inherit',
-                letterSpacing: '0.2px',
               }}
             >
               לשאלה הבאה
@@ -183,16 +179,18 @@ export default function QuestionCard({
               cursor: 'pointer',
               padding: '8px',
               fontFamily: 'inherit',
-              opacity: 0.7,
+              opacity: 0.65,
               transition: 'opacity 0.2s, color 0.2s',
             }}
             onMouseEnter={(e) => {
-              (e.currentTarget as HTMLButtonElement).style.opacity = '1';
-              (e.currentTarget as HTMLButtonElement).style.color = 'var(--color-primary)';
+              const el = e.currentTarget as HTMLButtonElement;
+              el.style.opacity = '1';
+              el.style.color = 'var(--color-navy)';
             }}
             onMouseLeave={(e) => {
-              (e.currentTarget as HTMLButtonElement).style.opacity = '0.7';
-              (e.currentTarget as HTMLButtonElement).style.color = 'var(--color-text-sub)';
+              const el = e.currentTarget as HTMLButtonElement;
+              el.style.opacity = '0.65';
+              el.style.color = 'var(--color-text-sub)';
             }}
           >
             חזרה לשאלה הקודמת

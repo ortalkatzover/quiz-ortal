@@ -9,13 +9,7 @@ interface LeadFormProps {
 
 interface FormErrors {
   fullName?: string;
-  phone?: string;
   email?: string;
-}
-
-function validateIsraeliPhone(phone: string): boolean {
-  const cleaned = phone.replace(/[\s\-]/g, '');
-  return /^(05\d{8}|0[2-9]\d{7})$/.test(cleaned);
 }
 
 function validateEmail(email: string): boolean {
@@ -26,8 +20,8 @@ const inputStyle: React.CSSProperties = {
   width: '100%',
   padding: '14px 16px',
   borderRadius: '12px',
-  border: '2px solid var(--color-border)',
-  background: '#fff',
+  border: '2px solid rgba(228, 208, 207, 0.8)',
+  background: 'rgba(255,255,255,0.85)',
   fontSize: '16px',
   color: 'var(--color-text-main)',
   fontFamily: 'inherit',
@@ -39,15 +33,9 @@ const inputStyle: React.CSSProperties = {
 const labelStyle: React.CSSProperties = {
   display: 'block',
   fontSize: '14px',
-  fontWeight: 600,
-  color: 'var(--color-text-main)',
+  fontWeight: 700,
+  color: 'var(--color-navy)',
   marginBottom: '6px',
-};
-
-const errorStyle: React.CSSProperties = {
-  fontSize: '13px',
-  color: '#D94F68',
-  marginTop: '4px',
 };
 
 export default function LeadForm({ onSubmit, isSubmitting }: LeadFormProps) {
@@ -61,11 +49,6 @@ export default function LeadForm({ onSubmit, isSubmitting }: LeadFormProps) {
   function validate(): FormErrors {
     const e: FormErrors = {};
     if (!fullName.trim()) e.fullName = 'שם מלא הוא שדה חובה';
-    if (!phone.trim()) {
-      e.phone = 'טלפון הוא שדה חובה';
-    } else if (!validateIsraeliPhone(phone)) {
-      e.phone = 'נא להזין מספר טלפון ישראלי תקין (למשל: 0501234567)';
-    }
     if (!email.trim()) {
       e.email = 'כתובת מייל היא שדה חובה';
     } else if (!validateEmail(email)) {
@@ -81,8 +64,7 @@ export default function LeadForm({ onSubmit, isSubmitting }: LeadFormProps) {
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    const allTouched = { fullName: true, phone: true, email: true };
-    setTouched(allTouched);
+    setTouched({ fullName: true, email: true });
     const validationErrors = validate();
     setErrors(validationErrors);
     if (Object.keys(validationErrors).length === 0) {
@@ -90,55 +72,40 @@ export default function LeadForm({ onSubmit, isSubmitting }: LeadFormProps) {
     }
   }
 
-  const focusStyle = {
-    borderColor: 'var(--color-primary)',
-    boxShadow: '0 0 0 3px rgba(192, 122, 142, 0.12)',
-  };
+  const focusBorderStyle = { borderColor: 'var(--color-navy)', boxShadow: '0 0 0 3px rgba(15,53,105,0.1)' };
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 16 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.4, ease: 'easeOut' }}
-    >
-      <div style={{ textAlign: 'center', marginBottom: '28px' }}>
+    <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
+      <div style={{ textAlign: 'center', marginBottom: '32px' }}>
         <div
           style={{
-            width: '56px',
-            height: '56px',
-            background: 'linear-gradient(135deg, var(--color-primary-light), var(--color-primary))',
+            width: '56px', height: '56px',
+            background: 'linear-gradient(135deg, var(--color-rose-light), var(--color-rose))',
             borderRadius: '50%',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
             margin: '0 auto 16px',
+            boxShadow: '0 6px 20px rgba(221,166,163,0.35)',
           }}
         >
-          <svg width="26" height="26" viewBox="0 0 26 26" fill="none" aria-hidden="true">
-            <path d="M13 2C7 2 2 7 2 13s5 11 11 11 11-5 11-11S19 2 13 2z" stroke="white" strokeWidth="1.8" fill="none"/>
-            <path d="M9 13l3 3 5-5" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M9 12l2 2 4-4" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+            <circle cx="12" cy="12" r="9" stroke="white" strokeWidth="1.8" fill="none"/>
           </svg>
         </div>
-        <h2
-          style={{
-            fontSize: '22px',
-            fontWeight: 800,
-            color: 'var(--color-text-main)',
-            marginBottom: '8px',
-          }}
-        >
+        <h2 style={{ fontSize: '22px', fontWeight: 700, color: 'var(--color-navy)', marginBottom: '8px', fontFamily: "'Playfair Display', 'Assistant', serif" }}>
           התוצאה שלך מוכנה
         </h2>
-        <p style={{ color: 'var(--color-text-sub)', fontSize: '15px', lineHeight: 1.6 }}>
-          השאירי פרטים כדי לראות עד כמה התוכנית מתאימה לך.
+        <p style={{ color: 'var(--color-text-sub)', fontSize: '15px', lineHeight: 1.65 }}>
+          השאירי פרטים כדי לראות את רמת ההתאמה שלך לתוכנית.
         </p>
       </div>
 
       <form onSubmit={handleSubmit} noValidate>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '18px' }}>
+
           <div>
             <label htmlFor="fullName" style={labelStyle}>
-              שם מלא <span style={{ color: '#D94F68' }}>*</span>
+              שם מלא <span style={{ color: '#c0392b' }}>*</span>
             </label>
             <input
               id="fullName"
@@ -146,54 +113,36 @@ export default function LeadForm({ onSubmit, isSubmitting }: LeadFormProps) {
               value={fullName}
               onChange={(e) => setFullName(e.target.value)}
               onBlur={() => handleBlur('fullName')}
-              onFocus={(e) => Object.assign(e.currentTarget.style, focusStyle)}
-              style={{
-                ...inputStyle,
-                borderColor: touched.fullName && errors.fullName ? '#D94F68' : 'var(--color-border)',
-              }}
+              onFocus={(e) => Object.assign(e.currentTarget.style, focusBorderStyle)}
+              style={{ ...inputStyle, borderColor: touched.fullName && errors.fullName ? '#c0392b' : 'rgba(228,208,207,0.8)' }}
               placeholder="השם שלך"
               aria-required="true"
               aria-invalid={!!errors.fullName}
-              aria-describedby={errors.fullName ? 'fullName-error' : undefined}
               autoComplete="name"
             />
             {touched.fullName && errors.fullName && (
-              <p id="fullName-error" style={errorStyle} role="alert">{errors.fullName}</p>
+              <p style={{ fontSize: '13px', color: '#c0392b', marginTop: '4px' }} role="alert">{errors.fullName}</p>
             )}
           </div>
 
           <div>
-            <label htmlFor="phone" style={labelStyle}>
-              טלפון <span style={{ color: '#D94F68' }}>*</span>
-            </label>
+            <label htmlFor="phone" style={labelStyle}>טלפון</label>
             <input
               id="phone"
               type="tel"
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
-              onBlur={() => handleBlur('phone')}
-              onFocus={(e) => Object.assign(e.currentTarget.style, focusStyle)}
-              style={{
-                ...inputStyle,
-                borderColor: touched.phone && errors.phone ? '#D94F68' : 'var(--color-border)',
-                direction: 'ltr',
-                textAlign: 'right',
-              }}
+              onFocus={(e) => Object.assign(e.currentTarget.style, focusBorderStyle)}
+              style={{ ...inputStyle, direction: 'ltr', textAlign: 'right' }}
               placeholder="0501234567"
-              aria-required="true"
-              aria-invalid={!!errors.phone}
-              aria-describedby={errors.phone ? 'phone-error' : undefined}
               autoComplete="tel"
               inputMode="tel"
             />
-            {touched.phone && errors.phone && (
-              <p id="phone-error" style={errorStyle} role="alert">{errors.phone}</p>
-            )}
           </div>
 
           <div>
             <label htmlFor="email" style={labelStyle}>
-              כתובת מייל <span style={{ color: '#D94F68' }}>*</span>
+              כתובת מייל <span style={{ color: '#c0392b' }}>*</span>
             </label>
             <input
               id="email"
@@ -201,22 +150,16 @@ export default function LeadForm({ onSubmit, isSubmitting }: LeadFormProps) {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               onBlur={() => handleBlur('email')}
-              onFocus={(e) => Object.assign(e.currentTarget.style, focusStyle)}
-              style={{
-                ...inputStyle,
-                borderColor: touched.email && errors.email ? '#D94F68' : 'var(--color-border)',
-                direction: 'ltr',
-                textAlign: 'right',
-              }}
+              onFocus={(e) => Object.assign(e.currentTarget.style, focusBorderStyle)}
+              style={{ ...inputStyle, direction: 'ltr', textAlign: 'right', borderColor: touched.email && errors.email ? '#c0392b' : 'rgba(228,208,207,0.8)' }}
               placeholder="your@email.com"
               aria-required="true"
               aria-invalid={!!errors.email}
-              aria-describedby={errors.email ? 'email-error' : undefined}
               autoComplete="email"
               inputMode="email"
             />
             {touched.email && errors.email && (
-              <p id="email-error" style={errorStyle} role="alert">{errors.email}</p>
+              <p style={{ fontSize: '13px', color: '#c0392b', marginTop: '4px' }} role="alert">{errors.email}</p>
             )}
           </div>
 
@@ -227,31 +170,27 @@ export default function LeadForm({ onSubmit, isSubmitting }: LeadFormProps) {
               gap: '12px',
               cursor: 'pointer',
               padding: '14px 16px',
-              background: 'var(--color-primary-xlight)',
+              background: 'rgba(221,166,163,0.08)',
               borderRadius: '12px',
-              border: `1px solid ${marketingConsent ? 'var(--color-primary-light)' : 'var(--color-border)'}`,
+              border: `1px solid ${marketingConsent ? 'rgba(221,166,163,0.5)' : 'rgba(228,208,207,0.6)'}`,
               transition: 'border-color 0.2s',
             }}
           >
             <div style={{ position: 'relative', flexShrink: 0, marginTop: '2px' }}>
               <input
                 type="checkbox"
-                id="marketingConsent"
                 checked={marketingConsent}
                 onChange={(e) => setMarketingConsent(e.target.checked)}
                 style={{ position: 'absolute', opacity: 0, width: '20px', height: '20px', cursor: 'pointer' }}
-                aria-label="אני מאשרת קבלת תוכן שיווקי"
+                aria-label="אני מאשרת קבלת עדכונים ודיוור"
               />
               <div
                 style={{
-                  width: '20px',
-                  height: '20px',
+                  width: '20px', height: '20px',
                   borderRadius: '6px',
-                  border: `2px solid ${marketingConsent ? 'var(--color-primary)' : 'var(--color-border)'}`,
-                  background: marketingConsent ? 'var(--color-primary)' : '#fff',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
+                  border: `2px solid ${marketingConsent ? 'var(--color-navy)' : 'var(--color-border)'}`,
+                  background: marketingConsent ? 'var(--color-navy)' : '#fff',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
                   transition: 'all 0.2s ease',
                   pointerEvents: 'none',
                 }}
@@ -264,32 +203,32 @@ export default function LeadForm({ onSubmit, isSubmitting }: LeadFormProps) {
               </div>
             </div>
             <span style={{ fontSize: '14px', color: 'var(--color-text-sub)', lineHeight: 1.5 }}>
-              אני מאשרת קבלת עדכונים, תוכן שיווקי ומידע על תוכניות נוספות
+              אני מאשרת קבלת עדכונים ודיוור מהתוכנית
             </span>
           </label>
 
           <motion.button
             type="submit"
             disabled={isSubmitting}
+            whileHover={{ scale: isSubmitting ? 1 : 1.01, y: isSubmitting ? 0 : -1 }}
             whileTap={{ scale: 0.98 }}
             style={{
               width: '100%',
               padding: '17px',
-              borderRadius: '14px',
+              borderRadius: '13px',
               border: 'none',
               background: isSubmitting
-                ? 'var(--color-primary-light)'
-                : 'linear-gradient(135deg, var(--color-primary), var(--color-primary-dark))',
+                ? 'rgba(15,53,105,0.4)'
+                : 'linear-gradient(135deg, var(--color-navy), var(--color-navy-dark))',
               color: '#fff',
               fontSize: '17px',
               fontWeight: 700,
               cursor: isSubmitting ? 'not-allowed' : 'pointer',
-              boxShadow: isSubmitting ? 'none' : '0 4px 16px rgba(192, 122, 142, 0.35)',
-              transition: 'all 0.2s ease',
+              boxShadow: isSubmitting ? 'none' : '0 6px 20px rgba(15,53,105,0.3)',
               fontFamily: 'inherit',
             }}
           >
-            {isSubmitting ? 'שנייה...' : 'הציגי לי את התוצאה ←'}
+            {isSubmitting ? 'שנייה...' : 'הציגי לי את התוצאה'}
           </motion.button>
         </div>
       </form>

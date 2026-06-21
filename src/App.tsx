@@ -1,15 +1,16 @@
 import { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import type { QuizPhase, QuizResult } from './types/quiz';
+import type { QuizPhase, LeadData, QuizResult } from './types/quiz';
 import { QUESTIONS, TOTAL_QUESTIONS } from './data/questions';
 import { calculateScore, determineResult, buildAnswerRecords } from './utils/calculateResult';
 import { submitLead } from './services/submitLead';
 import QuizIntro from './components/QuizIntro';
 import ProgressBar from './components/ProgressBar';
 import QuestionCard from './components/QuestionCard';
+import LeadForm from './components/LeadForm';
 import ResultScreen from './components/ResultScreen';
 
-const STORAGE_KEY = 'quiz_state_v1';
+const STORAGE_KEY = 'quiz_state_v2';
 
 interface PersistedState {
   phase: QuizPhase;
@@ -50,6 +51,7 @@ export default function App() {
   );
   const [showFeedback, setShowFeedback] = useState(saved?.showFeedback ?? false);
   const [result, setResult] = useState<QuizResult | null>(saved?.result ?? null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
     if (phase === 'intro') return;
@@ -76,22 +78,7 @@ export default function App() {
   const handleNext = useCallback(() => {
     const isLast = currentQuestion === TOTAL_QUESTIONS - 1;
     if (isLast) {
-      const { totalScore, warningCount } = calculateScore(selectedAnswers, QUESTIONS);
-      const quizResult = determineResult(totalScore, warningCount);
-      const answerRecords = buildAnswerRecords(selectedAnswers, QUESTIONS);
-      submitLead({
-        fullName: '',
-        phone: '',
-        email: '',
-        marketingConsent: false,
-        answers: answerRecords,
-        totalScore,
-        warningCount,
-        result: quizResult,
-        createdAt: new Date().toISOString(),
-      });
-      setResult(quizResult);
-      setPhase('result');
+      setPhase('form');
       setShowFeedback(false);
     } else {
       const nextQ = currentQuestion + 1;
@@ -107,6 +94,27 @@ export default function App() {
     setShowFeedback(selectedAnswers[prevQ] !== null);
   }, [currentQuestion, selectedAnswers]);
 
+  const handleFormSubmit = useCallback(async (leadData: LeadData) => {
+    setIsSubmitting(true);
+    const { totalScore, strongWarningCount, lightWarningCount } = calculateScore(selectedAnswers, QUESTIONS);
+    const quizResult = determineResult(totalScore, strongWarningCount);
+    const answerRecords = buildAnswerRecords(selectedAnswers, QUESTIONS);
+
+    await submitLead({
+      ...leadData,
+      answers: answerRecords,
+      totalScore,
+      strongWarningCount,
+      lightWarningCount,
+      result: quizResult,
+      createdAt: new Date().toISOString(),
+    });
+
+    setResult(quizResult);
+    setPhase('result');
+    setIsSubmitting(false);
+  }, [selectedAnswers]);
+
   const handleRestart = useCallback(() => {
     clearState();
     setPhase('intro');
@@ -121,7 +129,6 @@ export default function App() {
   return (
     <div style={{ minHeight: '100dvh', width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'flex-start', padding: '24px 16px 48px', position: 'relative', overflow: 'hidden' }}>
 
-      {/* Animated blobs */}
       <div className="blob blob-1" aria-hidden="true" />
       <div className="blob blob-2" aria-hidden="true" />
       <div className="blob blob-3" aria-hidden="true" />
@@ -132,7 +139,7 @@ export default function App() {
         transition={{ duration: 0.4 }}
         style={{ width: '100%', maxWidth: '720px', textAlign: 'center', marginBottom: '20px', position: 'relative', zIndex: 1 }}
       >
-        <p style={{ margin: 0, fontSize: '13px', color: '#fff', fontWeight: 700, letterSpacing: '1.2px', textTransform: 'uppercase', textShadow: '0 1px 4px rgba(0,0,0,0.15)' }}>
+        <p style={{ margin: 0, fontSize: '13px', color: 'rgba(255,255,255,0.92)', fontWeight: 700, letterSpacing: '1.2px', textTransform: 'uppercase', textShadow: '0 1px 6px rgba(15,53,105,0.25)' }}>
           מעצבות מבוקשות בעידן AI
         </p>
       </motion.header>
@@ -141,12 +148,12 @@ export default function App() {
         style={{
           width: '100%',
           maxWidth: '720px',
-          background: 'rgba(255, 255, 255, 0.78)',
+          background: 'rgba(255, 255, 255, 0.82)',
           backdropFilter: 'blur(24px)',
           WebkitBackdropFilter: 'blur(24px)',
           borderRadius: '28px',
-          border: '1px solid rgba(255,255,255,0.6)',
-          boxShadow: '0 8px 60px rgba(160, 80, 100, 0.18), 0 2px 12px rgba(0,0,0,0.06)',
+          border: '1px solid rgba(255,255,255,0.65)',
+          boxShadow: '0 8px 60px rgba(15,53,105,0.12), 0 2px 12px rgba(0,0,0,0.06)',
           padding: 'clamp(28px, 6vw, 56px)',
           overflow: 'hidden',
           position: 'relative',
@@ -178,6 +185,12 @@ export default function App() {
             </motion.div>
           )}
 
+          {phase === 'form' && (
+            <motion.div key="form" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, transition: { duration: 0.15 } }}>
+              <LeadForm onSubmit={handleFormSubmit} isSubmitting={isSubmitting} />
+            </motion.div>
+          )}
+
           {phase === 'result' && result && (
             <motion.div key="result" initial={{ opacity: 0, scale: 0.96 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, transition: { duration: 0.15 } }} transition={{ duration: 0.4, ease: 'easeOut' }}>
               <ResultScreen result={result} onRestart={handleRestart} />
@@ -186,7 +199,7 @@ export default function App() {
         </AnimatePresence>
       </main>
 
-      <footer style={{ marginTop: '24px', textAlign: 'center', color: 'rgba(255,255,255,0.7)', fontSize: '12px', position: 'relative', zIndex: 1 }}>
+      <footer style={{ marginTop: '24px', textAlign: 'center', color: 'rgba(255,255,255,0.65)', fontSize: '12px', position: 'relative', zIndex: 1 }}>
         © אורטל {new Date().getFullYear()} · כל הזכויות שמורות
       </footer>
     </div>
