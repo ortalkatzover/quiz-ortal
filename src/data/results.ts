@@ -7,7 +7,7 @@ export const RESULTS: Record<QuizResult, ResultContent> = {
       'לפי התשובות שלך, יש לך חיבור אמיתי לעיצוב, בסיס שאפשר לעבוד איתו, ונכונות להפוך את זה לעסק דרך יישום, שיווק ובנייה מסודרת.',
     subText:
       'זו לא אומרת שהתוצאה מובטחת - אבל זה כן אומר שאת מגיעה עם הנתונים הנכונים להפיק מהתוכנית הרבה.',
-    primaryButton: 'אני רוצה להצטרף לתוכנית',
+    primaryButton: 'למעבר לתשלום',
     primaryButtonHref: 'https://secure.cardcom.solutions/EA/EA5/Zb4anXQf20u0HTQvXNPvAw/PaymentSP',
     footerNote: 'מספר המקומות מוגבל כדי שאוכל לתת ליווי ופידבק אמיתי לכל משתתפת.',
   },
