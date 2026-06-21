@@ -4,7 +4,7 @@ import type { Submission } from '../types/quiz';
 // הכנס כאן את ה-URL של ה-Webhook שלך (Make, Zapier, רב-מסר וכו')
 // Insert your webhook URL here:
 // =====================================================
-const WEBHOOK_URL = '';
+const WEBHOOK_URL = 'https://script.google.com/macros/s/AKfycbyrJbDxzdlk5jvmzKgznfCdf9-bplxnGURUjcUGhl5wm9DeSF4G7tR7dkXEsp6hrLxBeg/exec';
 // =====================================================
 
 const STORAGE_KEY = 'quiz_submissions_v2';
