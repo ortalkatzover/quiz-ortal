@@ -4,7 +4,7 @@ import type { Submission } from '../types/quiz';
 // הכנס כאן את ה-URL של ה-Webhook שלך (Make, Zapier, רב-מסר וכו')
 // Insert your webhook URL here:
 // =====================================================
-const WEBHOOK_URL = 'https://script.google.com/macros/s/AKfycbyrJbDxzdlk5jvmzKgznfCdf9-bplxnGURUjcUGhl5wm9DeSF4G7tR7dkXEsp6hrLxBeg/exec';
+const WEBHOOK_URL = 'https://script.google.com/macros/s/AKfycbzDTzLgi4tMELDnkc6DPnQrJoxpATKaJulovbmlD18kZ-O5hY8-_67htODAkBJGrELFyw/exec';
 // =====================================================
 
 const STORAGE_KEY = 'quiz_submissions_v2';
@@ -22,12 +22,13 @@ export async function submitLead(submission: Submission): Promise<void> {
   // Log for debugging
   console.log('Quiz Submission:', submission);
 
-  // Send to webhook if URL is configured
+  // Send to Google Apps Script (no-cors required to avoid CORS errors)
   if (WEBHOOK_URL) {
     try {
       await fetch(WEBHOOK_URL, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'text/plain' },
         body: JSON.stringify(submission),
       });
     } catch (err) {
