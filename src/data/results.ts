@@ -18,8 +18,6 @@ export const RESULTS: Record<QuizResult, ResultContent> = {
     subText:
       'התוכנית יכולה להתאים לך אם את מוכנה להתחייב לתהליך, לבצע משימות ולהתנסות בשיווק גם אם זה לא מושלם.',
     contactNote: 'ניצור איתך קשר בהקדם.',
-    secondaryButton: 'אני רוצה לקרוא עוד על התוכנית',
-    secondaryButtonHref: 'https://ortalkatzover.com/bio/',
   },
   not_ready: {
     title: 'יכול להיות שזה עדיין לא הזמן הנכון לתוכנית',

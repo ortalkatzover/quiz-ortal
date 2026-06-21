@@ -40,9 +40,7 @@ const labelStyle: React.CSSProperties = {
 
 export default function LeadForm({ onSubmit, isSubmitting }: LeadFormProps) {
   const [fullName, setFullName] = useState('');
-  const [phone, setPhone] = useState('');
   const [email, setEmail] = useState('');
-  const [marketingConsent, setMarketingConsent] = useState(false);
   const [errors, setErrors] = useState<FormErrors>({});
   const [touched, setTouched] = useState<Record<string, boolean>>({});
 
@@ -68,7 +66,7 @@ export default function LeadForm({ onSubmit, isSubmitting }: LeadFormProps) {
     const validationErrors = validate();
     setErrors(validationErrors);
     if (Object.keys(validationErrors).length === 0) {
-      onSubmit({ fullName: fullName.trim(), phone: phone.trim(), email: email.trim(), marketingConsent });
+      onSubmit({ fullName: fullName.trim(), phone: '', email: email.trim(), marketingConsent: false });
     }
   }
 
@@ -126,21 +124,6 @@ export default function LeadForm({ onSubmit, isSubmitting }: LeadFormProps) {
           </div>
 
           <div>
-            <label htmlFor="phone" style={labelStyle}>טלפון</label>
-            <input
-              id="phone"
-              type="tel"
-              value={phone}
-              onChange={(e) => setPhone(e.target.value)}
-              onFocus={(e) => Object.assign(e.currentTarget.style, focusBorderStyle)}
-              style={{ ...inputStyle, direction: 'ltr', textAlign: 'right' }}
-              placeholder="0501234567"
-              autoComplete="tel"
-              inputMode="tel"
-            />
-          </div>
-
-          <div>
             <label htmlFor="email" style={labelStyle}>
               כתובת מייל <span style={{ color: '#c0392b' }}>*</span>
             </label>
@@ -162,50 +145,6 @@ export default function LeadForm({ onSubmit, isSubmitting }: LeadFormProps) {
               <p style={{ fontSize: '13px', color: '#c0392b', marginTop: '4px' }} role="alert">{errors.email}</p>
             )}
           </div>
-
-          <label
-            style={{
-              display: 'flex',
-              alignItems: 'flex-start',
-              gap: '12px',
-              cursor: 'pointer',
-              padding: '14px 16px',
-              background: 'rgba(221,166,163,0.08)',
-              borderRadius: '12px',
-              border: `1px solid ${marketingConsent ? 'rgba(221,166,163,0.5)' : 'rgba(228,208,207,0.6)'}`,
-              transition: 'border-color 0.2s',
-            }}
-          >
-            <div style={{ position: 'relative', flexShrink: 0, marginTop: '2px' }}>
-              <input
-                type="checkbox"
-                checked={marketingConsent}
-                onChange={(e) => setMarketingConsent(e.target.checked)}
-                style={{ position: 'absolute', opacity: 0, width: '20px', height: '20px', cursor: 'pointer' }}
-                aria-label="אני מאשרת קבלת עדכונים ודיוור"
-              />
-              <div
-                style={{
-                  width: '20px', height: '20px',
-                  borderRadius: '6px',
-                  border: `2px solid ${marketingConsent ? 'var(--color-navy)' : 'var(--color-border)'}`,
-                  background: marketingConsent ? 'var(--color-navy)' : '#fff',
-                  display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  transition: 'all 0.2s ease',
-                  pointerEvents: 'none',
-                }}
-              >
-                {marketingConsent && (
-                  <svg width="10" height="8" viewBox="0 0 10 8" fill="none">
-                    <path d="M1 4L3.5 6.5L9 1" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
-                  </svg>
-                )}
-              </div>
-            </div>
-            <span style={{ fontSize: '14px', color: 'var(--color-text-sub)', lineHeight: 1.5 }}>
-              אני מאשרת קבלת עדכונים ודיוור מהתוכנית
-            </span>
-          </label>
 
           <motion.button
             type="submit"
