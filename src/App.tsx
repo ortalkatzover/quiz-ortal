@@ -43,6 +43,9 @@ function clearState() {
 export default function App() {
   const saved = loadState();
 
+  // Read lead name from URL query param (e.g. ?name=ישראל+ישראלי passed by Lovable)
+  const leadName = new URLSearchParams(window.location.search).get('name') ?? '';
+
   const [phase, setPhase] = useState<QuizPhase>(saved?.phase ?? 'intro');
   const [currentQuestion, setCurrentQuestion] = useState(saved?.currentQuestion ?? 0);
   const [selectedAnswers, setSelectedAnswers] = useState<(number | null)[]>(
@@ -79,7 +82,7 @@ export default function App() {
       const quizResult = determineResult(totalScore, strongWarningCount);
       const answerRecords = buildAnswerRecords(selectedAnswers, QUESTIONS);
       submitLead({
-        fullName: '', phone: '', email: '', marketingConsent: false,
+        fullName: leadName, phone: '', email: '', marketingConsent: false,
         answers: answerRecords, totalScore, strongWarningCount, lightWarningCount,
         result: quizResult, createdAt: new Date().toISOString(),
       });
